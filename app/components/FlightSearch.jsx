@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
-import FlightList from "./FlightList";
+import AirportAutocomplete from "./AirportAutocomplete";
+import dataFlight from "../dataFlight.json";
+import FlightListData from "./FlightListData";
 
 function FlightSearch() {
   const [origin, setOrigin] = useState("");
@@ -11,21 +13,51 @@ function FlightSearch() {
   const [children, setChildren] = useState(0);
   const [selectedOutboundFlight, setSelectedOutboundFlight] = useState(null);
   const [selectedReturnFlight, setSelectedReturnFlight] = useState(null);
-  const [tripType, setTripType] = useState("oneWay");
+  const [tripType, setTripType] = useState("roundTrip");
   const [showModal, setShowModal] = useState(false);
   const [showFlights, setShowFlights] = useState(false);
+  const [availableFlights, setAvailableFlights] = useState([]);
+  const [availableFlightsRound, setAvailableFlightRounds] = useState([]);
+  const [airport, setAirports] = useState(false);
+
+  useEffect(() => {
+    setAirports(dataFlight.aeropuertos);
+  }, []);
+
+  useEffect(() => {
+    setAvailableFlights(dataFlight.vuelos); // Establecer los vuelos disponibles desde el archivo JSON
+  }, []);
 
   const handleSearch = () => {
+    const validFlightsOneWay = dataFlight.vuelos.filter(
+      (flight) =>
+        flight.originAirport == origin.split(" - ")[1] &&
+        flight.destinationAirport === destination.split(" - ")[1] &&
+        new Date(departureDate) <= new Date(flight.departureTime)
+    );
+
+    const validFlightsRoundWay = dataFlight.vuelos.filter(
+      (flight) =>
+        flight.originAirport == destination.split(" - ")[1] &&
+        flight.destinationAirport === origin.split(" - ")[1] &&
+        new Date(returnDate) <= new Date(flight.departureTime)
+    );
+
     if (
       origin &&
       destination &&
       departureDate &&
-      (tripType === "oneWay" || (tripType === "roundTrip" && returnDate))
+      validFlightsOneWay.length > 0 // Verificar que existan vuelos válidos
     ) {
+      setAvailableFlights(validFlightsOneWay);
+      setAvailableFlightRounds(validFlightsRoundWay);
       setShowFlights(true);
     } else {
-      alert("Please fill in all required fields.");
+      alert(
+        "Por favor selecciona un origen, destino válidos y fechas validas."
+      );
     }
+
   };
 
   const handleAccept = () => {
@@ -40,44 +72,13 @@ function FlightSearch() {
     setShowModal(false);
   };
 
-  const availableOutboundFlights = [
-    { id: 1, name: "Outbound Flight 1", price: 100 },
-    { id: 2, name: "Outbound Flight 2", price: 150 },
-    { id: 3, name: "Outbound Flight 3", price: 200 },
-    { id: 4, name: "Outbound Flight 4", price: 120 },
-    { id: 5, name: "Outbound Flight 5", price: 180 },
-    { id: 6, name: "Outbound Flight 6", price: 220 },
-  ];
-
-  const availableReturnFlights = [
-    { id: 7, name: "Return Flight 1", price: 100 },
-    { id: 8, name: "Return Flight 2", price: 150 },
-    { id: 9, name: "Return Flight 3", price: 200 },
-    { id: 10, name: "Return Flight 4", price: 120 },
-    { id: 11, name: "Return Flight 5", price: 180 },
-    { id: 12, name: "Return Flight 6", price: 220 },
-  ];
-
   return (
     <div>
       <div className="bg-sky-300 m-4 rounded-xl">
         <div className="flex justify-normal m-4">
-          <h1 className="font-bold text-3 xl m-4">Busqueda de vuelos</h1>
+          <h1 className="font-bold text-3xl m-4">Busqueda de vuelos</h1>
           <div className="flex justify-between items-center mb-2 bg-white rounded-xl m-2 p-2">
-            <div className="mr-4 bg- p-2 bg-sky-200 rounded-xl hover:bg-green-100">
-              <input
-                type="radio"
-                id="oneWay"
-                name="tripType"
-                value="oneWay"
-                checked={tripType === "oneWay"}
-                onChange={() => setTripType("oneWay")}
-              />
-              <label htmlFor="oneWay" className="ml-2 ">
-                One Way
-              </label>
-            </div>
-            <div className="bg-sky-200 p-2 rounded-xl hover:bg-green-100">
+            <div className="mr-4 p-2 bg-sky-200 rounded-xl hover:bg-green-100">
               <input
                 type="radio"
                 id="roundTrip"
@@ -90,29 +91,44 @@ function FlightSearch() {
                 Round Trip
               </label>
             </div>
+            <div className="bg-sky-200 p-2 rounded-xl hover:bg-green-100 ">
+              <input
+                type="radio"
+                id="oneWay"
+                name="tripType"
+                value="oneWay"
+                checked={tripType === "oneWay"}
+                onChange={() => setTripType("oneWay")}
+              />
+              <label htmlFor="oneWay" className="ml-2 ">
+                One Way
+              </label>
+            </div>
           </div>
         </div>
         <div className="flex justify-between p-4 m-5">
-          <div>
-            <label className="block mb-2 text-xl font-semibold">Origin:</label>
-            <input
-              type="text"
+          <div className="mx-2 ">
+            <label className="block mb-2 text-xl font-semibold">Origen:</label>
+            <AirportAutocomplete
               value={origin}
-              onChange={(e) => setOrigin(e.target.value)}
-              className="border border-gray-300 rounded-md px-4 py-2 w-full"
+              onChange={setOrigin}
+              airports={airport}
             />
           </div>
-          <div>
-            <label className="block mb-2 text-xl font-semibold">Destination:</label>
-            <input
-              type="text"
-              value={destination}
-              onChange={(e) => setDestination(e.target.value)}
-              className="border border-gray-300 rounded-md px-4 py-2 w-full"
-            />
+          <div className="mx-2">
+            <label className="block mb-2 text-xl font-semibold">Destino:</label>
+            <div className="z-20">
+              <AirportAutocomplete
+                value={destination}
+                onChange={setDestination}
+                airports={airport}
+              />
+            </div>
           </div>
-          <div>
-            <label className="block mb-2 text-xl font-semibold">Departure Date:</label>
+          <div className="mx-2">
+            <label className="block mb-2 text-xl font-semibold">
+              Departure Date:
+            </label>
             <input
               type="date"
               value={departureDate}
@@ -120,10 +136,12 @@ function FlightSearch() {
               className="border border-gray-300 rounded-md px-4 py-2 w-full"
             />
           </div>
-          <div>
+          <div className="mx-2">
             {tripType === "roundTrip" && (
-              <div>
-                <label className="block mb-2 text-xl font-semibold">Return Date:</label>
+              <div className="mx-2">
+                <label className="block mb-2 text-xl font-semibold">
+                  Return Date:
+                </label>
                 <input
                   type="date"
                   value={returnDate}
@@ -133,7 +151,7 @@ function FlightSearch() {
               </div>
             )}
           </div>
-          <div>
+          <div className="mx-1">
             <label className="block mb-2 text-xl font-semibold">Adults:</label>
             <input
               type="number"
@@ -143,8 +161,10 @@ function FlightSearch() {
               className="border border-gray-300 rounded-md px-4 py-2 w-20"
             />
           </div>
-          <div>
-            <label className="block mb-2 text-xl font-semibold">Children:</label>
+          <div className="mx-2">
+            <label className="block mb-2 text-xl font-semibold">
+              Children:
+            </label>
             <input
               type="number"
               value={children}
@@ -153,10 +173,11 @@ function FlightSearch() {
               className="border border-gray-300 rounded-md px-4 py-2 w-20"
             />
           </div>
-
-          <button className="btn-search" onClick={handleSearch}>
-            Buscar
-          </button>
+          <div>
+            <button className="btn-search" onClick={handleSearch}>
+              Buscar
+            </button>
+          </div>
 
           {showModal && (
             <Modal
@@ -178,8 +199,8 @@ function FlightSearch() {
         <div className="mt-8 m-4 p-4 bg-sky-200 rounded-xl">
           <h2 className="text-2xl font-semibold">Flights:</h2>
           {tripType === "oneWay" && (
-            <FlightList
-              flights={availableOutboundFlights}
+            <FlightListData
+              flights={availableFlights}
               handleFlightSelection={setSelectedOutboundFlight}
               isFlightSelected={(flight) => flight === selectedOutboundFlight}
             />
@@ -187,14 +208,14 @@ function FlightSearch() {
           {tripType === "roundTrip" && (
             <>
               <h3 className="text-xl font-semibold mt-4">Outbound Flights:</h3>
-              <FlightList
-                flights={availableOutboundFlights}
+              <FlightListData
+                flights={availableFlights}
                 handleFlightSelection={setSelectedOutboundFlight}
                 isFlightSelected={(flight) => flight === selectedOutboundFlight}
               />
               <h3 className="text-xl font-semibold mt-4">Return Flights:</h3>
-              <FlightList
-                flights={availableReturnFlights}
+              <FlightListData
+                flights={availableFlightsRound}
                 handleFlightSelection={setSelectedReturnFlight}
                 isFlightSelected={(flight) => flight === selectedReturnFlight}
               />

@@ -4,7 +4,7 @@
 
 .btn-search{
     background-color: blue;
-    width: 10%;
+    width: max;
     color: white;
     margin: 5px;
     padding: 10px;
