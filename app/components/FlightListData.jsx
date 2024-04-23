@@ -3,8 +3,13 @@ import React from "react";
 export default function FlightListData({
   flights,
   handleFlightSelection,
-  isFlightSelected,
 }) {
+
+  const handleSelectFligth = (flight) =>{
+    handleFlightSelection(flight); //mandarle el vuelo a la clase padre
+    console.log(flight);
+  }
+
   return (
     <div className="m-5 p-4 bg-gray-300 rounded-xl">
       {flights.map((flight, index) => (
@@ -21,7 +26,7 @@ export default function FlightListData({
             Price: COP {flight.price}
           </div>
           <div className="flex justify-end m-2">
-            <button className="btn-search m-2">Seleccionar</button>
+            <button className="btn-search m-2" onClick={() => handleSelectFligth(flight)}>Seleccionar</button>
           </div>
         </div>
       ))}

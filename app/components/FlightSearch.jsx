@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Modal from "./Modal";
 import AirportAutocomplete from "./AirportAutocomplete";
 import dataFlight from "../dataFlight.json";
 import FlightListData from "./FlightListData";
@@ -13,12 +12,13 @@ function FlightSearch() {
   const [children, setChildren] = useState(0);
   const [selectedOutboundFlight, setSelectedOutboundFlight] = useState(null);
   const [selectedReturnFlight, setSelectedReturnFlight] = useState(null);
-  const [tripType, setTripType] = useState("roundTrip");
+  const [tripType, setTripType] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showFlights, setShowFlights] = useState(false);
   const [availableFlights, setAvailableFlights] = useState([]);
   const [availableFlightsRound, setAvailableFlightRounds] = useState([]);
   const [airport, setAirports] = useState(false);
+  const [oneWay, setOneway] = useState(false);
 
   useEffect(() => {
     setAirports(dataFlight.aeropuertos);
@@ -47,29 +47,17 @@ function FlightSearch() {
       origin &&
       destination &&
       departureDate &&
-      validFlightsOneWay.length > 0 // Verificar que existan vuelos válidos
+      validFlightsOneWay.length > 0
     ) {
       setAvailableFlights(validFlightsOneWay);
       setAvailableFlightRounds(validFlightsRoundWay);
       setShowFlights(true);
+      setOneway(!tripType);
     } else {
       alert(
         "Por favor selecciona un origen, destino válidos y fechas validas."
       );
     }
-
-  };
-
-  const handleAccept = () => {
-    console.log("Origin:", origin);
-    console.log("Destination:", destination);
-    console.log("Departure Date:", departureDate);
-    console.log("Return Date:", returnDate);
-    console.log("Adults:", adults);
-    console.log("Children:", children);
-    console.log("Selected Outbound Flight:", selectedOutboundFlight);
-    console.log("Selected Return Flight:", selectedReturnFlight);
-    setShowModal(false);
   };
 
   return (
@@ -84,8 +72,8 @@ function FlightSearch() {
                 id="roundTrip"
                 name="tripType"
                 value="roundTrip"
-                checked={tripType === "roundTrip"}
-                onChange={() => setTripType("roundTrip")}
+                checked={tripType}
+                onChange={() => setTripType(true)}
               />
               <label htmlFor="roundTrip" className="ml-2">
                 Round Trip
@@ -97,8 +85,8 @@ function FlightSearch() {
                 id="oneWay"
                 name="tripType"
                 value="oneWay"
-                checked={tripType === "oneWay"}
-                onChange={() => setTripType("oneWay")}
+                checked={!tripType}
+                onChange={() => setTripType(false)}
               />
               <label htmlFor="oneWay" className="ml-2 ">
                 One Way
@@ -137,7 +125,7 @@ function FlightSearch() {
             />
           </div>
           <div className="mx-2">
-            {tripType === "roundTrip" && (
+            {tripType && (
               <div className="mx-2">
                 <label className="block mb-2 text-xl font-semibold">
                   Return Date:
@@ -178,59 +166,41 @@ function FlightSearch() {
               Buscar
             </button>
           </div>
-
-          {showModal && (
-            <Modal
-              origin={origin}
-              destination={destination}
-              departureDate={departureDate}
-              returnDate={returnDate}
-              adults={adults}
-              children={children}
-              selectedOutboundFlight={selectedOutboundFlight}
-              selectedReturnFlight={selectedReturnFlight}
-              onClose={() => setShowModal(false)}
-              onAccept={handleAccept}
-            />
-          )}
         </div>
       </div>
       {showFlights && (
         <div className="mt-8 m-4 p-4 bg-sky-200 rounded-xl">
           <h2 className="text-2xl font-semibold">Flights:</h2>
-          {tripType === "oneWay" && (
+          {oneWay ? (
             <FlightListData
               flights={availableFlights}
               handleFlightSelection={setSelectedOutboundFlight}
-              isFlightSelected={(flight) => flight === selectedOutboundFlight}
             />
-          )}
-          {tripType === "roundTrip" && (
-            <>
+          ) : (
+            <div>
               <h3 className="text-xl font-semibold mt-4">Outbound Flights:</h3>
               <FlightListData
                 flights={availableFlights}
                 handleFlightSelection={setSelectedOutboundFlight}
-                isFlightSelected={(flight) => flight === selectedOutboundFlight}
               />
-              <h3 className="text-xl font-semibold mt-4">Return Flights:</h3>
-              <FlightListData
-                flights={availableFlightsRound}
-                handleFlightSelection={setSelectedReturnFlight}
-                isFlightSelected={(flight) => flight === selectedReturnFlight}
-              />
-            </>
+              {selectedOutboundFlight && (
+                <div>
+                  <h3 className="text-xl font-semibold mt-4">
+                    Return Flights:
+                  </h3>
+                  <FlightListData
+                    flights={availableFlightsRound}
+                    handleFlightSelection={setSelectedReturnFlight}
+                  />
+                </div>
+              )}
+              ;
+            </div>
           )}
-          <button
-            onClick={() => setShowModal(true)}
-            className="mt-4 bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600"
-          >
-            Accept
-          </button>
         </div>
       )}
+      ;
     </div>
   );
 }
-
 export default FlightSearch;
