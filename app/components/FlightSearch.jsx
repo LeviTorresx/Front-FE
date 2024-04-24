@@ -64,7 +64,7 @@ function FlightSearch() {
   const handleAccept = () => {
     console.log("Origin:", origin);
     console.log("Destination:", destination);
-    console.log("Departure Date:", departureDate);
+    console.log("Departure Date:", departureDate);  
     console.log("Return Date:", returnDate);
     console.log("Adults:", adults);
     console.log("Children:", children);
@@ -77,7 +77,7 @@ function FlightSearch() {
     <div>
       <div className="bg-sky-100 m-4 rounded">
         <div className="flex justify-normal m-4">
-          <h1 className="font-semibold text-3xl m-4">Busqueda de vuelos</h1>
+          <h1 className="font-semibold text-3xl m-4">FLIGHT SEARCH</h1>
           <div className="flex justify-between items-center mb-2 bg-white rounded-xl m-2 p-2">
             <div className="mr-4 p-2 bg-sky-200 rounded-xl hover:bg-green-100">
               <input
@@ -109,7 +109,7 @@ function FlightSearch() {
         </div>
         <div className="flex justify-between p-4 m-5">
           <div className="mx-2 ">
-            <label className="block mb-2 text-xl">Origen:</label>
+            <label className="block mb-2 text-xl">Origin:</label>
             <AirportAutocomplete
               value={origin}
               onChange={setOrigin}
@@ -117,7 +117,7 @@ function FlightSearch() {
             />
           </div>
           <div className="mx-2">
-            <label className="block mb-2 text-xl ">Destino:</label>
+            <label className="block mb-2 text-xl ">Destination:</label>
             <div className="z-20">
               <AirportAutocomplete
                 value={destination}

@@ -12,14 +12,14 @@ const Navbar = () => {
             <button className="px-4 py-2 mx-1 bg-gray-200 text-black rounded-xl">
               <div className="flex items-center justify-between">
                 <div className="w-6 h-6 mx-2 bg-gray-300 rounded-xl"></div>
-                registrame
+                SING UP
               </div>
             </button>
 
             <button className="px-5 py-2 mx-1 bg-gray-200 text-black rounded-xl">
             <div className="flex items-center justify-between">
                 <div className="w-6 h-6 mx-2 bg-gray-300 rounded-xl"></div>
-                iniciar sesion
+                LOG IN
               </div>
             </button>
           </div>
