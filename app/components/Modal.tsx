@@ -25,16 +25,14 @@ const Modal: React.FC<ModalProps> = ({ origin, destination, departureDate, retur
         {returnDate && <p>Return Date: {returnDate}</p>}
         <p>Adults: {adults}</p>
         <p>Children: {children}</p>
-        <p>Outbound Flight: {selectedOutboundFlight ? selectedOutboundFlight.name : 'None'}</p>
-        {selectedReturnFlight && <p>Return Flight: {selectedReturnFlight.name}</p>}
-        <button 
-          onClick={onAccept} 
+        <button
+          onClick={onAccept}
           className="mt-4 bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600"
         >
           Confirm and Print to Console
         </button>
-        <button 
-          onClick={onClose} 
+        <button
+          onClick={onClose}
           className="mt-4 ml-4 bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-md hover:bg-gray-400"
         >
           Close

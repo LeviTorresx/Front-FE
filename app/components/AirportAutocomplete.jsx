@@ -20,7 +20,7 @@ function AirportAutocomplete({ value, onChange, airports }) {
   };
 
   return (
-    <div className="">
+    <div className="border-2 border-gray-400 rounded">
       <input
         type="text"
         value={value}
@@ -30,7 +30,7 @@ function AirportAutocomplete({ value, onChange, airports }) {
     
       <ul className="rounded-xl bg-gray-400 absolute">
         {suggestions.map((airport, index) => (
-          <li className="p-2 hover:bg-gray-100" key={index} onClick={() => handleSelect(airport.name+" - "+airport.CodeIATA)}>
+          <li className="p-2 hover:bg-gray-300" key={index} onClick={() => handleSelect(airport.name+" - "+airport.CodeIATA)}>
             {airport.name} - {airport.CodeIATA}
           </li>
         ))}
