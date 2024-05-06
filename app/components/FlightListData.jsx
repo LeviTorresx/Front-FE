@@ -9,22 +9,33 @@ export default function FlightListData({ flights, handleFlightSelection }) {
   };
 
   return (
-    <div className="m-1 p-2 bg-gray-300 rounded">
+    <div className="m-1 p-2 rounded ">
       {flights.map((flight, index) => (
-        <div key={index} className={`m-5 p-5 rounded-xl ${selectedFlight === flight ? 'bg-violet-300 text-white' : 'bg-white'}`}>
+        <div
+          key={index}
+          className={`m-5 border-b-2 border-neutral-400 ${
+            selectedFlight === flight ? " text-black" : "bg-white"
+          }`}
+        >
           <div className="flex justify-between p-4">
             <div className="mx-2">{flight.departureTime}</div>
             <div className="mx-2">{flight.originAirport}</div>
-            <div className="mx-2">{flight.duration}</div>
+            <div className="mx-2 text-neutral-600"><div>Duracion</div>{flight.duration}</div>
             <div className="mx-2">{flight.arrivalTime}</div>
             <div className="mx-2">{flight.destinationAirport}</div>
+            <div className="mx-5">COP {flight.price}</div>
           </div>
-          <div className="flex justify-end mx-5">
-            Price: COP {flight.price}
-          </div>
+
           <div className="flex justify-end m-2">
-            <button className={`btn-search m-2 ${selectedFlight === flight ? 'bg-gray-400 cursor-not-allowed' : ''}`} onClick={() => handleSelectFlight(flight)} disabled={selectedFlight === flight}>
-              {selectedFlight === flight ? 'Selected' : 'Select'}
+            <button
+              className={`btn-select m-2 bg-blue-500 text-white ${
+                selectedFlight === flight
+                  ? "btn-selected bg-white border-2 border-blue-500 text-blue-500"
+                  : ""
+              }`}
+              onClick={() => handleSelectFlight(flight)}
+            >
+              {selectedFlight === flight ? "Seleccionado" : "Seleccionar"}
             </button>
           </div>
         </div>

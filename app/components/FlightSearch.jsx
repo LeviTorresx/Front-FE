@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import AirportAutocomplete from "./AirportAutocomplete";
 import dataFlight from "../dataFlight.json";
 import FlightListData from "./FlightListData";
+import AdultChildrenInput from "./AdultChildrenInput";
+
 import Modal from "./Modal";
 
 function FlightSearch() {
@@ -64,7 +66,7 @@ function FlightSearch() {
   const handleAccept = () => {
     console.log("Origin:", origin);
     console.log("Destination:", destination);
-    console.log("Departure Date:", departureDate);  
+    console.log("Departure Date:", departureDate);
     console.log("Return Date:", returnDate);
     console.log("Adults:", adults);
     console.log("Children:", children);
@@ -75,11 +77,11 @@ function FlightSearch() {
 
   return (
     <div>
-      <div className="bg-sky-100 m-4 rounded">
+      <div className="m-4 rounded">
         <div className="flex justify-normal m-4">
-          <h1 className="font-semibold text-3xl m-4">FLIGHT SEARCH</h1>
-          <div className="flex justify-between items-center mb-2 bg-white rounded-xl m-2 p-2">
-            <div className="mr-4 p-2 bg-sky-200 rounded-xl hover:bg-green-100">
+          <h1 className="font-semibold text-3xl m-5 pt-2">Vuelos</h1>
+          <div className="flex justify-between mb-2 rounded-xl m-2 p-2">
+            <div className="mr-4 p-2 rounded-xl">
               <input
                 type="radio"
                 id="roundTrip"
@@ -87,12 +89,13 @@ function FlightSearch() {
                 value="roundTrip"
                 checked={tripType}
                 onChange={() => setTripType(true)}
+                className="r-boton"
               />
-              <label htmlFor="roundTrip" className="ml-2">
-                Round Trip
+              <label htmlFor="roundTrip" className="ml-2 w-full radio-custom">
+                IDA Y VUELTA
               </label>
             </div>
-            <div className="bg-sky-200 p-2 rounded-xl hover:bg-green-100">
+            <div className="p-2 rounded-xl ">
               <input
                 type="radio"
                 id="oneWay"
@@ -100,16 +103,17 @@ function FlightSearch() {
                 value="oneWay"
                 checked={!tripType}
                 onChange={() => setTripType(false)}
+                className="r-boton"
               />
-              <label htmlFor="oneWay" className="ml-2 ">
-                One Way
+              <label htmlFor="oneWay" className="ml-2 w-100 radio-custom">
+                SOLO IDA
               </label>
             </div>
           </div>
         </div>
         <div className="flex justify-between p-4 m-5">
-          <div className="mx-2 ">
-            <label className="block mb-2 text-xl">Origin:</label>
+          <div className="mx-2 relative ">
+            <label className="block mb-2 label">Origen</label>
             <AirportAutocomplete
               value={origin}
               onChange={setOrigin}
@@ -117,7 +121,7 @@ function FlightSearch() {
             />
           </div>
           <div className="mx-2">
-            <label className="block mb-2 text-xl ">Destination:</label>
+            <label className="block mb-2 label">Destino</label>
             <div className="z-20">
               <AirportAutocomplete
                 value={destination}
@@ -127,7 +131,7 @@ function FlightSearch() {
             </div>
           </div>
           <div className="mx-2">
-            <label className="block mb-2 text-xl">Departure Date:</label>
+            <label className="block mb-2 label">Fecha de ida</label>
             <input
               type="date"
               value={departureDate}
@@ -138,7 +142,7 @@ function FlightSearch() {
           <div className="mx-2">
             {tripType && (
               <div className="mx-2">
-                <label className="block mb-2 text-xl">Return Date:</label>
+                <label className="block mb-2 label">Fecha de vuelta</label>
                 <input
                   type="date"
                   value={returnDate}
@@ -148,29 +152,16 @@ function FlightSearch() {
               </div>
             )}
           </div>
-          <div className="mx-1">
-            <label className="block mb-2 text-xl ">Adults:</label>
-            <input
-              type="number"
-              value={adults}
-              onChange={(e) => setAdults(Number(e.target.value))}
-              min={1}
-              className="border-2 border-gray-400 rounded-md px-4 py-2 w-20"
+          <div className="pt-6">
+            <AdultChildrenInput
+              onAdultsChange={setAdults}
+              onChildrenChange={setChildren}
             />
           </div>
-          <div className="mx-2">
-            <label className="block mb-2 text-xl ">Children:</label>
-            <input
-              type="number"
-              value={children}
-              onChange={(e) => setChildren(Number(e.target.value))}
-              min={0}
-              className="border-2 border-gray-400 rounded-md px-4 py-2 w-20"
-            />
-          </div>
-          <div>
+
+          <div className="mx-5 pt-4">
             <button className="btn-search" onClick={handleSearch}>
-            Search Flight
+              Buscar
             </button>
           </div>
         </div>
@@ -192,7 +183,6 @@ function FlightSearch() {
 
       {showFlights && (
         <div className="mt-8 m-4 p-2 rounded">
-          <h2 className="text-2xl font-semibold">Flights:</h2>
           {oneWay ? (
             <FlightListData
               flights={availableFlights}
@@ -200,7 +190,7 @@ function FlightSearch() {
             />
           ) : (
             <div>
-              <h3 className="text-xl font-semibold mt-4">Outbound Flights:</h3>
+              <h3 className="text-xl font-semibold mt-2">Vuelos de ida</h3>
               <FlightListData
                 flights={availableFlights}
                 handleFlightSelection={setSelectedOutboundFlight}
@@ -208,12 +198,14 @@ function FlightSearch() {
               {selectedOutboundFlight && (
                 <div>
                   <h3 className="text-xl font-semibold mt-4">
-                    Return Flights:
+                    Vuelos de vuelta
                   </h3>
                   <FlightListData
                     flights={availableFlightsRound}
                     handleFlightSelection={setSelectedReturnFlight}
                   />
+
+                  
                 </div>
               )}
             </div>
