@@ -1,9 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 
+/**
+ * Componente de autocompletado para aeropuertos.
+ * 
+ * @param {string} value - El valor actual del campo de entrada.
+ * @param {function} onChange - Función de devolución de llamada que se llama cuando cambia el valor del campo de entrada.
+ * @param {Array} airports - La lista de aeropuertos disponibles para autocompletar.
+ * @returns {JSX.Element} Componente de autocompletado para aeropuertos.
+ */
 function AirportAutocomplete({ value, onChange, airports }) {
-  const [suggestions, setSuggestions] = useState([]);
-  const wrapperRef = useRef(null);
+  const [suggestions, setSuggestions] = useState([]); // Estado para almacenar sugerencias de aeropuertos.
+  const wrapperRef = useRef(null); // Referencia al contenedor del componente.
 
+  // Efecto para agregar y quitar el listener de clic fuera del componente.
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -11,12 +20,14 @@ function AirportAutocomplete({ value, onChange, airports }) {
     };
   }, []);
 
+  // Manejador de eventos para cerrar las sugerencias cuando se hace clic fuera del componente.
   const handleClickOutside = (event) => {
     if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
       setSuggestions([]);
     }
   };
 
+  // Manejador de eventos para cambiar el valor del campo de entrada y filtrar las sugerencias.
   const handleChange = (event) => {
     const inputValue = event.target.value;
     const filteredSuggestions = airports.filter(
@@ -28,6 +39,7 @@ function AirportAutocomplete({ value, onChange, airports }) {
     onChange(inputValue);
   };
 
+  // Manejador de eventos para seleccionar un aeropuerto de la lista de sugerencias.
   const handleSelect = (airportName) => {
     onChange(airportName);
     setSuggestions([]);
@@ -41,9 +53,10 @@ function AirportAutocomplete({ value, onChange, airports }) {
           value={value}
           onChange={handleChange}
           className="rounded-md px-4 py-2 w-full h-10"
-        />{" "}
+        />
       </div>
 
+      {/* Renderizar las sugerencias si hay alguna */}
       {suggestions.length > 0 && (
         <ul className="rounded-xl absolute">
           {suggestions.map((airport, index) => (

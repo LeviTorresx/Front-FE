@@ -1,23 +1,33 @@
 import React, { useState } from "react";
 
+/**
+ * Componente para la entrada de adultos y niños.
+ * 
+ * @param {function} onAdultsChange - Función de devolución de llamada que se llama cuando cambia el número de adultos.
+ * @param {function} onChildrenChange - Función de devolución de llamada que se llama cuando cambia el número de niños.
+ * @returns {JSX.Element} Componente para la entrada de adultos y niños.
+ */
 export default function AdultChildrenInput({
   onAdultsChange,
   onChildrenChange,
 }) {
-  const [adults, setAdults] = useState(1);
-  const [children, setChildren] = useState(0);
-  const [isOpen, setIsOpen] = useState(false);
+  const [adults, setAdults] = useState(1); // Estado para el número de adultos.
+  const [children, setChildren] = useState(0); // Estado para el número de niños.
+  const [isOpen, setIsOpen] = useState(false); // Estado para controlar la visibilidad del menú desplegable.
 
+  // Función para alternar la visibilidad del menú desplegable.
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
+  // Función para incrementar el número de adultos.
   const increaseAdults = () => {
     const newAdults = adults + 1;
     setAdults(newAdults);
     onAdultsChange(newAdults);
   };
 
+  // Función para decrementar el número de adultos.
   const decreaseAdults = () => {
     if (adults > 1) {
       const newAdults = adults - 1;
@@ -26,12 +36,14 @@ export default function AdultChildrenInput({
     }
   };
 
+  // Función para incrementar el número de niños.
   const increaseChildren = () => {
     const newChildren = children + 1;
     setChildren(newChildren);
     onChildrenChange(newChildren);
   };
 
+  // Función para decrementar el número de niños.
   const decreaseChildren = () => {
     if (children > 0) {
       const newChildren = children - 1;
@@ -48,7 +60,7 @@ export default function AdultChildrenInput({
         onFocus={toggleDropdown}
         onBlur={toggleDropdown}
         readOnly
-        className=" h-10 border rounded px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-black"
+        className="h-10 border rounded px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-black"
       />
       {isOpen && (
         <div

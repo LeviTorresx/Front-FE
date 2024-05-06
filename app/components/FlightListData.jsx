@@ -1,8 +1,18 @@
 import React, { useState } from "react";
 
+/**
+ * Componente para mostrar una lista de vuelos y permitir la selección de uno.
+ * @param {Object[]} flights - Lista de vuelos a mostrar.
+ * @param {Function} handleFlightSelection - Función para manejar la selección de vuelo.
+ * @returns {JSX.Element} Componente de React que muestra la lista de vuelos.
+ */
 export default function FlightListData({ flights, handleFlightSelection }) {
   const [selectedFlight, setSelectedFlight] = useState(null);
 
+  /**
+   * Maneja la selección de un vuelo.
+   * @param {Object} flight - Vuelo seleccionado.
+   */
   const handleSelectFlight = (flight) => {
     setSelectedFlight(flight);
     handleFlightSelection(flight);
@@ -20,7 +30,10 @@ export default function FlightListData({ flights, handleFlightSelection }) {
           <div className="flex justify-between p-4">
             <div className="mx-2">{flight.departureTime}</div>
             <div className="mx-2">{flight.originAirport}</div>
-            <div className="mx-2 text-neutral-600"><div>Duracion</div>{flight.duration}</div>
+            <div className="mx-2 text-neutral-600">
+              <div>Duración</div>
+              {flight.duration}
+            </div>
             <div className="mx-2">{flight.arrivalTime}</div>
             <div className="mx-2">{flight.destinationAirport}</div>
             <div className="mx-5">COP {flight.price}</div>
@@ -30,7 +43,7 @@ export default function FlightListData({ flights, handleFlightSelection }) {
             <button
               className={`btn-select m-2 bg-blue-500 text-white ${
                 selectedFlight === flight
-                  ? "btn-selected bg-white border-2 border-blue-500 text-blue-500"
+                  ? "btn-selected bg-white border-2 border-blue-500 text-blue-600"
                   : ""
               }`}
               onClick={() => handleSelectFlight(flight)}
@@ -43,3 +56,4 @@ export default function FlightListData({ flights, handleFlightSelection }) {
     </div>
   );
 }
+
