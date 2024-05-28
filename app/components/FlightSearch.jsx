@@ -222,6 +222,7 @@ function FlightSearch() {
             </button>
           </div>
         </div>
+        {/* mensaje de error */}
         {errorMessage && (
           <div className="mx-4 my-2">
             <Alert variant="outlined" severity="error">
